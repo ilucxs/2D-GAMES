@@ -1,0 +1,113 @@
+
+			Behaviors
+
+Barco(Player):  -8 direction
+		-Scroll to
+		-Bound to layout
+
+Polvo:  	-Bullet
+
+--Bala:   	-Bullet
+		*destroy outside layout  
+
+Explosão: 	*Fade
+
+Game Over:      *Fade
+                *destroy outside layout
+
+
+			Eventos
+Player seguir o mouse:
+System -> Every Tick -> Add action -> Player -> Set Angle Toward Position: 
+Mouse.X
+Mouse.Y
+
+Atirar:
+Mouse -> on click: left/clicked
+Add action: Player -> Spaw another object:
+Object: Bala
+Layer: 1
+Image: 0
+
+Balas matarem os monstros:
+Add condition: Bullet -> On collision with another object: Monster
+Add Action: Monster -> Destroy
+Add Action: Bullet -> Spawn another object -> Explosion
+layer:1
+Add action: Bullet -> Destroy 
+
+Monstros "inteligentes"
+Add condition: System -> On start of Layout
+Add action: Monster -> Set angle -> random(360)
+
+Monstros seguirem o barco:
+Add condition: Monster -> Is outside layout
+Add action: Monster -> Set angle toward position -> Para X, digite Player.X - para Y, digite Player.Y
+
+Saude do monstro:
+Monstro: properties bar -> instance variables -> Add/edit:
+Saude
+Number
+(numero de tiros que o monstro leva para morrer)
+
+
+Ache o seguinte evento: Bullet - on collision with Monster. Perceba que temos um ícone "destroy monster". Vamos substituí-lo com um "subtract 1 from health". Botão direito na ação "destroy monster" e clique em Replace action:
+
+Monster -> Subtract from ->  health
+
+Add condition: Monster -> Compare instance variable -> Health, Less or equal, 0
+Add action: Monster -> Spawn another object -> Explosão, layer 1
+Add action: Monster -> Destroy
+
+Pontuação:
+Botão direito no espaço na parte debaixo do event sheet -> Add global variable:
+Name: Score
+Type: Number
+Value: 0
+
+Em nosso evento "Monster: health less or equal 0" (quando um monstro morre):
+Add Action:System -> Add to -> Score, value 1
+
+Placar:
+Insert new object -> Text -> Properties bar -> Altere a cor e a fonte.
+
+No evento Every tick:
+Add action: Text -> Set text:
+"Score: " & Score
+
+Monstros sem fim:
+Add condition: System -> Every X seconds -> 3
+Add action: System -> Create object:
+Object: Monster
+layer:1
+X: 1080
+Y: random(1920)
+
+Monstro matar o Player:
+Add condition: Monster -> On collision with another object -> Player
+Add action: Player -> Destroy
+
+Mover o personagem utilizando letras:
+Add condition: Keyboard -> Key is down -> x
+Add action: Player -> Simulate control -> Selcionar direção.
+
+Placar se manter na tela:
+Criar uma nova layer e mover o texto para ela:
+Botão direito -> Mover to layer -> Placar
+
+Selecionar a layer e em properties bar:
+Parallax -> x=0
+
+Game over: 
+Add condition: Player -> on destroyed 
+add action: System -> Create object: 
+Game over
+Layer: 3
+x: 61
+y: 216
+Add condition: Text -> Fade out finished
+Add action: System -> Restart layout
+Add Action: System -> Reset global variable to default
+
+ 
+
